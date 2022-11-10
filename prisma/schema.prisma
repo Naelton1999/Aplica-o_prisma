@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id              String            @id @default(uuid())
+  name            String
+  bar_code        String
+  price           Decimal
+  description     String
+  ProductCategory ProductCategory[]
+
+  @@map("product")
+}
+
+model Category {
+  id          String @id @default(uuid())
+  name        String
+  description String
+
+  ProductCategory ProductCategory[]
+
+  @@map("category")
+}
+
+model Users {
+  id       String  @id @default(uuid())
+  name     String
+  email    String
+  password String
+  is_admin Boolean @default(false)
+
+  @@map("users")
+}
+
+model ProductCategory {
+  id          String   @id @default(uuid())
+  id_product  String
+  product     Product  @relation(fields: [id_product], references: [id])
+  id_category String
+  category    Category @relation(fields: [id_category], references: [id])
+
+  @@map("productcategory")
+}
